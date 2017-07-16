@@ -5,13 +5,14 @@ import { Post} from "./blog/post";
 @Injectable()
 export class PostService {
 
+  serverUrl="http://0.0.0.0:3002/api";
   constructor(private http: Http) { }
   headers = new Headers({
     'Content-Type': 'application/json',
   })
 
   getPosts():Observable<Post[]>{
-    let url="http://0.0.0.0:3002/api/post1s";
+    let url = this.serverUrl+"/post1s";
     return this.http.get(url, {headers: this.headers}).map(res=> res.json()).catch(err=>{
       return Observable.throw(err);
 
@@ -20,9 +21,17 @@ export class PostService {
   }
 
   getPost(id: string): Observable<Post>{
-    let url = "http://0.0.0.0:3002/api/post1s/" + id;
+    let url = this.serverUrl+"/post1s/" + id;
     return this.http.get(url, {headers: this.headers}).map(res=>res.json() as Post).catch(err=>{
       return Observable.throw(err);
     });
+  }
+
+  createPost(post: Post): Observable<any> {
+    let url=this.serverUrl+"/post1s";
+    return this.http.post(url, post, {headers: this.headers}).map(res => res.json()).catch(err=>{
+      return Observable.throw(err);
+    })
+
   }
 }
